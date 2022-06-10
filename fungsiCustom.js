@@ -19,66 +19,51 @@ let modifyFile3 = (val) => {
 
 // TODO: Kerjakan bacaData
 // gunakan variabel file1, file2, dan file3
-fnCallback = (data, err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    return data;
+
+const dataPotong = (parsedData) => {
+  if (parsedData.message !== undefined) {
+    splitData = parsedData.message.split(" ");
+    const lastWord = splitData;
+    return lastWord[lastWord.length - 1];
+  }
+  if (parsedData[0].message !== undefined) {
+    splitData = parsedData[0].message.split(" ");
+    const lastWord = splitData;
+    return lastWord[lastWord.length - 1];
+  }
+  if (parsedData[0].data.message !== undefined) {
+    splitData = parsedData[0].data.message.split(" ");
+    const lastWord = splitData;
+    return lastWord[lastWord.length - 1];
   }
 };
-
 let newData = [];
 const bacaData = (fnCallback) => {
   let fileList = [file1, file2, file3];
   fileList.map((file) => {
     fs.readFile(file, "utf8", (err, data) => {
       if (err) {
-        return err;
+        fnCallback(err, null);
       } else {
         parsedData = JSON.parse(data);
         index = fileList.indexOf(file);
       }
-      let indexKata = fileList.length - 1;
-      let x = indexKata - 1;
+      pushData(dataPotong(parsedData), index);
 
-      if (index === 0) {
-        splitData = parsedData.message.split(" ");
-        const indexOne = splitData[x];
-        pushData(indexOne, index);
-        if (
-          newData.includes(undefined) === false &&
-          newData.length === fileList.length
-        ) {
-          fnCallback(newData, err);
-        }
-      }
-      if (index === 1) {
-        splitData = parsedData[0].message.split(" ");
-        const indexOne = splitData[x];
-        pushData(indexOne, index);
-        if (
-          newData.includes(undefined) === false &&
-          newData.length === fileList.length
-        ) {
-          fnCallback(newData, err);
-        }
-      }
-      if (index === 2) {
-        splitData = parsedData[0].data.message.split(" ");
-        const indexOne = splitData[x];
-        pushData(indexOne, index);
-        if (
-          newData.includes(undefined) === false &&
-          newData.length === fileList.length
-        ) {
-          fnCallback(newData, err);
-        }
+      if (
+        fileList.length === newData.length &&
+        newData.includes(undefined) === false
+      ) {
+        fnCallback(null, newData);
       }
     });
   });
 };
-pushData = (data, index) => {
-  newData[index] = data;
+pushData = (data) => {
+  newData.push(data);
+  newData.filter((e, i, s) => {
+    return s.indexOf(e) === i;
+  });
 };
 
 // ! JANGAN DIMODIFIKASI
