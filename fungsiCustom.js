@@ -39,31 +39,60 @@ const dataPotong = (parsedData) => {
 };
 let newData = [];
 const bacaData = (fnCallback) => {
-  let fileList = [file1, file2, file3];
-  fileList.map((file) => {
-    fs.readFile(file, "utf8", (err, data) => {
+  fs.readFile(file1, (err, data) => {
+    if (err) {
+      fnCallback(err);
+      return;
+    }
+    const parsedData = JSON.parse(data);
+    const dataPotongan = dataPotong(parsedData);
+    pushData(dataPotongan);
+    fs.readFile(file2, (err, data) => {
       if (err) {
-        fnCallback(err, null);
-      } else {
-        parsedData = JSON.parse(data);
-        index = fileList.indexOf(file);
+        fnCallback(err);
+        return;
       }
-      pushData(dataPotong(parsedData), index);
-
-      if (
-        fileList.length === newData.length &&
-        newData.includes(undefined) === false
-      ) {
-        fnCallback(null, newData);
-      }
+      const parsedData = JSON.parse(data);
+      const dataPotongan = dataPotong(parsedData);
+      pushData(dataPotongan);
+      fs.readFile(file3, (err, data) => {
+        if (err) {
+          fnCallback(err);
+          return;
+        }
+        const parsedData = JSON.parse(data);
+        const dataPotongan = dataPotong(parsedData);
+        pushData(dataPotongan);
+        fnCallback(
+          null,
+          newData.filter((e, i, s) => {
+            return s.indexOf(e) === i;
+          })
+        );
+      });
     });
   });
 };
+// fileList.map((file) => {
+//   fs.readFile(file, "utf8", (err, data) => {
+//     if (err) {
+//       fnCallback(err, null);
+//     } else {
+//       parsedData = JSON.parse(data);
+//       index = fileList.indexOf(file);
+//     }
+//     pushData(dataPotong(parsedData), index);
+
+//     if (
+//       fileList.length === newData.length &&
+//       newData.includes(undefined) === false
+//     ) {
+//       fnCallback(null, newData);
+//     }
+//   });
+// });
 pushData = (data) => {
   newData.push(data);
-  newData.filter((e, i, s) => {
-    return s.indexOf(e) === i;
-  });
 };
 
 // ! JANGAN DIMODIFIKASI
