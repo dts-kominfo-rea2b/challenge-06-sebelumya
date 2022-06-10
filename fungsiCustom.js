@@ -45,23 +45,34 @@ const bacaData = (fnCallback) => {
         splitData = parsedData.message.split(" ");
         const indexOne = splitData[x];
         pushData(indexOne, index);
+        if (
+          newData.includes(undefined) === false &&
+          newData.length === fileList.length
+        ) {
+          fnCallback(newData, err);
+        }
       }
       if (index === 1) {
         splitData = parsedData[0].message.split(" ");
         const indexOne = splitData[x];
         pushData(indexOne, index);
+        if (
+          newData.includes(undefined) === false &&
+          newData.length === fileList.length
+        ) {
+          fnCallback(newData, err);
+        }
       }
       if (index === 2) {
         splitData = parsedData[0].data.message.split(" ");
         const indexOne = splitData[x];
         pushData(indexOne, index);
-      }
-
-      if (
-        newData.includes(undefined) === false &&
-        newData.length === fileList.length
-      ) {
-        fnCallback(newData, err);
+        if (
+          newData.includes(undefined) === false &&
+          newData.length === fileList.length
+        ) {
+          fnCallback(newData, err);
+        }
       }
     });
   });
